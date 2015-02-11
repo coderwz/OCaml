@@ -125,7 +125,14 @@ let rec int_of_roman (r:roman):int =
         | C -> 100
         | D -> 500
         | M -> 1000 in
-        let helper  = 
+        let helper acc = 
+            match lst with
+            | [] -> acc
+            | h::[] -> acc + int_of_numeral h
+            | h1::h2::t -> (
+                if int_of_numeral h1>= int_of_numeral h2 then acc + int_of_numeral h1 + int_of_roman h2::t else
+                    acc - int_of_numeral h1 + int_of_numeral h2 + int_of_roman t
+            ) 
 
 
 
