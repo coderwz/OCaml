@@ -72,44 +72,47 @@ let is_unimodal lst =
 
 Ex3:
 
-(* helper function: return a tuple in which the first list has n entries. *)
- let helper lst n = 
-    let rec findTuple aux i = function
-        |[] -> ()
-        |hd::tl -> if i=n then (List.rev aux, tl) else findTuple hd::aux (i+1) tl
- in findTuple [] 0 lst
-
+(* helper function: return a tuple in which the first list has n elements. *)
+ let rec helper acc n i = function
+    |[] -> ([], [])
+    |hd::tl -> if i=n then (List.rev acc, hd::tl) else helper (hd::acc) n (i+1) tl
 
 (* main function *)
-let rec complete_list helper acc lst i= 
-    match i with
-    | List.length lst -> helper lst i::acc
-    | _ -> acc::complete_list helper (helper lst i)::acc lst (i+1)
+let complete_list lst =
+    let rec helper2 l acc = function 
+        | List.length lst -> acc
+        | _ -> helper2 l ((helper l i)::acc) (i+1)
+    in helper2 lst [] 1
 
 
 Ex4:
 
-let rec rev_int num acc digit = 
-    if rev_int<0 then -(rev_int -num acc digit) else
+
+let rec helper num acc = 
+    if num<0 then (-(helper (-num) acc)) else
     (
         match num with
         | 0 -> acc
-        | _ -> acc + (num mod 10)*(10**digit) + 
-            rev_int (num/10) (acc + (num mod 10)*(10**digit) (digit+1)
+        | _ -> helper (num/10) (10*acc + (num mod 10))
     )
+
+let rev_int num = helper num 0
 
 Ex5:
 
-let rec unflatten lst k i acc subAcc= 
-    if k<=0 then None else
-    (
-        match lst with
-        | [] -> Some (List.rev subAcc::acc)
-        | h::t -> (
-                    if i=k then unflatten t k 1 (List.rev h::subAcc)::acc [] else
-                        unflatten t k (i+1) acc h::subAcc
+let rec helper lst k i (acc : 'a list list) subAcc = 
+    match lst with
+    | [] -> List.rev (subAcc::acc)
+    | h::t -> (
+                if i=k then helper t k 1 ((List.rev (h::subAcc))::acc) [] else
+                    helper t k (i+1) acc (h::subAcc)
                 )
-    )
+
+let unflatten lst k = 
+    match lst with
+    | [] -> None
+    | hd::t -> Some (helper lst k 1 [] [])
+
 
 Ex6:
 
@@ -125,14 +128,16 @@ let rec int_of_roman (r:roman):int =
         | C -> 100
         | D -> 500
         | M -> 1000 in
-        let helper acc = 
+        let helper acc lst= 
             match lst with
             | [] -> acc
             | h::[] -> acc + int_of_numeral h
             | h1::h2::t -> (
-                if int_of_numeral h1>= int_of_numeral h2 then acc + int_of_numeral h1 + int_of_roman h2::t else
-                    acc - int_of_numeral h1 + int_of_numeral h2 + int_of_roman t
-            ) 
+                if int_of_numeral h1>= int_of_numeral h2 then (acc + int_of_numeral h1 + int_of_roman (h2::t)) else
+                    (acc - int_of_numeral h1 + int_of_roman (h2::t))
+                )
+        in helper 0 r;;
+            
 
 
 
