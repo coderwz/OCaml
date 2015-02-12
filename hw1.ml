@@ -31,11 +31,11 @@ Problem 2:
 Problem 3:
 
 let reverseList1 (x: 'a list):'a list = 
-    let rec reverseList2 (y: 'a list)(z: 'a list):'a list = 
+    let rec reverseHelper (y: 'a list)(z: 'a list):'a list = function
         match y with
         | [] -> []
-        | hd::tl -> reverseList2 tl [hd]@z
-in reverseList2 x []
+        | hd::tl -> reverseHelper tl [hd]@z
+    in reverseHelper x []
 
 
 
