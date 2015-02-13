@@ -139,6 +139,13 @@ let rec int_of_roman (r:roman):int =
         in helper 0 r;;
             
 
+TEST_UNIT "unflattedn-test" = assert_true ((unflatten (-1) [1;2;3;4;5;6]) = None)
+TEST_UNIT "unflattedn-test" = assert_true ((unflatten 0 [1;2;3;4;5;6]) = None)
+TEST_UNIT "unflattedn-test" = assert_true ((unflatten 2 [1;2;3;4;5;6]) = Some [[1;2];[3;4];[5;6]])
+TEST_UNIT "unflattedn-test" = assert_true ((unflatten 3 [1;2;3;4;5;6;7;8]) = Some [[1;2;3];[4;5;6];[7;8]])
+TEST_UNIT "unflattedn-test" = assert_true ((unflatten 6 [1;2;3;4;5;6]) = Some [[1;2;3;4;5;6]])
+TEST_UNIT "unflattedn-test" = assert_true ((unflatten 7 [1;2;3;4;5;6]) = Some [[1;2;3;4;5;6]])
+TEST_UNIT "unflattedn-test" = assert_true ((unflatten 2 []) = Some [[]])
 
 
 
